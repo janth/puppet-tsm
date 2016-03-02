@@ -38,7 +38,7 @@ class tsm::service::redhat {
       path      => '/bin:/sbin:/usr/bin:/usr/sbin',
       logoutput => true,
       command   => '/usr/bin/systemctl daemon-reload',
-      subscribe => File[$::tsm::service_script],
+      require   => File[$::tsm::service_script],
       notify    => Service[ $::tsm::service_name],
     }
   } else {
