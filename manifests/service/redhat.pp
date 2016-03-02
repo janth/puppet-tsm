@@ -23,6 +23,23 @@ class tsm::service::redhat {
     group  => 'root',
     mode   => $service_script_mode,
     source => $::tsm::service_script_source,
+    notify => Service[ $::tsm::service_name],
+  }
+
+  if getvar('::operatingsystemmajrelease') {
+    $os_maj_release = $::operatingsystemmajrelease
+  } else {
+    $os_versions    = split("${::operatingsystemrelease}", '[.]') # lint:ignore:only_variable_string
+    $os_maj_release = $os_versions[0]
+  }
+  if $os_maj_release = 7 {
+    exec { 'tsm_systemd_daemon_reload':
+      path      => '/bin:/sbin:/usr/bin:/usr/sbin',
+      logoutput => true,
+      command   => '/usr/bin/systemctl daemon-reload',
+      subscribe => File[$::tsm::service_script],
+      notify    => Service[ $::tsm::service_name],
+    }
   }
 
   service { $::tsm::service_name:
@@ -33,5 +50,5 @@ class tsm::service::redhat {
     subscribe  => Concat[$::tsm::config],
   }
 
-  File[$::tsm::service_script] -> Service[$::tsm::service_name]
+  File[$::tsm::service_script] -> Exec['tsm_systemd_daemon_reload'] -> Service[$::tsm::service_name]
 }
