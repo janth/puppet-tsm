@@ -54,5 +54,7 @@ class tsm::service inherits tsm {
       }
       Exec['generate-tsm.pwd'] -> Service[$::tsm::service_name]
     }
+  } else {
+    notify { "Not managing tsm service $::tsm::service_name, tsm::service_manage is $::tsm::service_manage": }
   }
 }
