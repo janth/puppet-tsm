@@ -32,7 +32,7 @@ class tsm::service::redhat {
     $os_versions    = split("${::operatingsystemrelease}", '[.]') # lint:ignore:only_variable_string
     $os_maj_release = $os_versions[0]
   }
-  if $os_maj_release = 7 {
+  if $os_maj_release == 7 {
     exec { 'tsm_systemd_daemon_reload':
       path      => '/bin:/sbin:/usr/bin:/usr/sbin',
       logoutput => true,
