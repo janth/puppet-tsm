@@ -51,4 +51,5 @@ class tsm::service::redhat {
   }
 
   File[$::tsm::service_script] -> Exec['tsm_systemd_daemon_reload'] -> Service[$::tsm::service_name]
+  notify { "Now RHEL service setup": }
 }
