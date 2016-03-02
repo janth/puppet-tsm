@@ -40,6 +40,8 @@ class tsm::service::redhat {
       subscribe => File[$::tsm::service_script],
       notify    => Service[ $::tsm::service_name],
     }
+  } else {
+    notify { "Not rhel7 ($os_maj_release), no systemctl daemon-reload": }
   }
 
   service { $::tsm::service_name:
