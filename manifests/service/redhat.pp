@@ -23,7 +23,8 @@ class tsm::service::redhat {
     group  => 'root',
     mode   => $service_script_mode,
     source => $::tsm::service_script_source,
-    notify => Service[ $::tsm::service_name],
+    notify => Exec['tsm_systemd_daemon_reload'],
+    #notify => Service[ $::tsm::service_name],
   }
 
   if getvar('::operatingsystemmajrelease') {
@@ -50,6 +51,8 @@ class tsm::service::redhat {
     hasstatus  => true,
     hasrestart => true,
     subscribe  => Concat[$::tsm::config],
+    subscribe  => Exec['tsm_systemd_daemon_reload'],
+    subscribe  => File[$::tsm::service_script],
   }
 
   File[$::tsm::service_script] -> Exec['tsm_systemd_daemon_reload'] -> Service[$::tsm::service_name]
