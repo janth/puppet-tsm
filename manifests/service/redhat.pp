@@ -30,7 +30,7 @@ class tsm::service::redhat {
     #onlyif    => 'test -r /etc/init.d/dsmcad',
     creates   => '/etc/init.d/rpm-dsmcad',
     logoutput => true,
-  } ->
+  }
   if getvar('::operatingsystemmajrelease') {
     $os_maj_release = $::operatingsystemmajrelease
   } else {
