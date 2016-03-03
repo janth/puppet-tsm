@@ -25,8 +25,12 @@ class tsm::service::redhat {
     source => $::tsm::service_script_source,
     notify => Exec['tsm_systemd_daemon_reload'],
     #notify => Service[ $::tsm::service_name],
-  }
-
+  } ->
+  exec { '/bin/mv /etc/init.d/dsmcad /etc/init.d/rpm-dsmcad':
+    #onlyif    => 'test -r /etc/init.d/dsmcad',
+    creates   => '/etc/init.d/rpm-dsmcad',
+    logoutput => true,
+  } ->
   if getvar('::operatingsystemmajrelease') {
     $os_maj_release = $::operatingsystemmajrelease
   } else {
