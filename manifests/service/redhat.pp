@@ -19,11 +19,12 @@ class tsm::service::redhat {
 
   notify { "DEBUG:: Managing tsm service $::tsm::service_name ($::tsm::service_script, from $::tsm::service_script_source), tsm::service_manage is $::tsm::service_manage": }
   file { $::tsm::service_script:
-    ensure => file,
-    owner  => 'root',
-    group  => 'root',
-    mode   => $service_script_mode,
-    source => $::tsm::service_script_source,
+    ensure  => file,
+    owner   => 'root',
+    group   => 'root',
+    mode    => $service_script_mode,
+    source  => $::tsm::service_script_source,
+    require => Package[$packages],
     #notify => Exec['tsm_systemd_daemon_reload'],
     #notify => Service[ $::tsm::service_name],
   } ->
