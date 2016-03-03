@@ -33,28 +33,14 @@ class tsm::service::redhat {
     require   => Package['TIVsm-BA'],
     logoutput => true,
   } ->
-
-  /*
-  if getvar('::operatingsystemmajrelease') {
-    $os_maj_release = $::operatingsystemmajrelease
-  } else {
-    $os_versions    = split("${::operatingsystemrelease}", '[.]') # lint:ignore:only_variable_string
-    $os_maj_release = $os_versions[0]
-  }
-  if $os_maj_release == 7 {
-    ...
-  } else {
-    notify { "Not rhel7 ($os_maj_release), no systemctl daemon-reload": }
-  }
-  */
-
   exec { 'tsm_systemd_daemon_reload':
-    path      => '/bin:/sbin:/usr/bin:/usr/sbin',
-    logoutput => true,
-    command   => '/usr/bin/systemctl daemon-reload',
-    onlyif    => 'test -x /usr/bin/systemctl',
-    subscribe => File[$::tsm::service_script],
-    notify    => Service[ $::tsm::service_name],
+    path        => '/bin:/sbin:/usr/bin:/usr/sbin',
+    logoutput   => true,
+    command     => '/usr/bin/systemctl daemon-reload',
+    onlyif      => 'test -x /usr/bin/systemctl',
+    subscribe   => File[$::tsm::service_script],
+    notify      => Service[ $::tsm::service_name],
+    refreshonly => true,
   } ->
   service { $::tsm::service_name:
     ensure     => $::tsm::service_ensure,
