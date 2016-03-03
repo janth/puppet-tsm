@@ -24,7 +24,7 @@ class tsm::service::redhat {
     group   => 'root',
     mode    => $service_script_mode,
     source  => $::tsm::service_script_source,
-    require => Package[$packages],
+    require => Package['TIVsm-BA'],
     #notify => Exec['tsm_systemd_daemon_reload'],
     #notify => Service[ $::tsm::service_name],
   } ->
