@@ -250,7 +250,7 @@ class tsm (
   }
 
   anchor {'tsm::begin': } ->
-  notify { "DEBUG:: Managing tsm service?? $::tsm::service_name ($::tsm::service_script, from $::tsm::service_source), tsm::service_manage is $::tsm::service_manage": }
+  notify { "DEBUG:: Managing tsm service?? $::tsm::service_name ($::tsm::service_script, from $::tsm::service_script_source), tsm::service_manage is $::tsm::service_manage": }
   class { '::tsm::install': } ->
   class { '::tsm::config': } ->
   class { '::tsm::service': } ->

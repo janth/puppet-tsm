@@ -17,7 +17,7 @@ class tsm::service::redhat {
     default => '0755'
   }
 
-  notify { "DEBUG:: Managing tsm service $::tsm::service_name ($::tsm::service_script, from $::tsm::service_source), tsm::service_manage is $::tsm::service_manage": }
+  notify { "DEBUG:: Managing tsm service $::tsm::service_name ($::tsm::service_script, from $::tsm::service_script_source), tsm::service_manage is $::tsm::service_manage": }
   file { $::tsm::service_script:
     ensure => file,
     owner  => 'root',
