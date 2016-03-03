@@ -17,7 +17,7 @@ class tsm::service::redhat {
     default => '0755'
   }
 
-  notify { "DEBUG:: Managing tsm service $::tsm::service_name ($::tsm::service_script, from $::tsm::service_script_source), tsm::service_manage is $::tsm::service_manage": }
+  #notify { "DEBUG:: Managing tsm service $::tsm::service_name ($::tsm::service_script, from $::tsm::service_script_source), tsm::service_manage is $::tsm::service_manage": }
   file { $::tsm::service_script:
     ensure  => file,
     owner   => 'root',
@@ -29,8 +29,8 @@ class tsm::service::redhat {
     #notify => Service[ $::tsm::service_name],
   } ->
   exec { '/bin/mv /etc/init.d/dsmcad /etc/init.d/rpm-dsmcad':
-    #onlyif    => 'test -r /etc/init.d/dsmcad',
     creates   => '/etc/init.d/rpm-dsmcad',
+    require   => Package['TIVsm-BA'],
     logoutput => true,
   } ->
 
@@ -53,7 +53,7 @@ class tsm::service::redhat {
     logoutput => true,
     command   => '/usr/bin/systemctl daemon-reload',
     onlyif    => 'test -x /usr/bin/systemctl',
-    require   => File[$::tsm::service_script],
+    subscribe => File[$::tsm::service_script],
     notify    => Service[ $::tsm::service_name],
   } ->
   service { $::tsm::service_name:
