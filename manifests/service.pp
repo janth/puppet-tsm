@@ -53,10 +53,6 @@ class tsm::service inherits tsm {
         path    => ['/bin', '/usr/bin']
       }
       Exec['generate-tsm.pwd'] -> Service[$::tsm::service_name]
-    } else {
-      notify { "Not setting initial password, tsm::set_initial_password is $::tsm::set_initial_password": }
-    }
-  } else {
-    notify { "Not managing tsm service $::tsm::service_name, tsm::service_manage is $::tsm::service_manage": }
-  }
+    } # else { notify { "Not setting initial password, tsm::set_initial_password is $::tsm::set_initial_password": } }
+  } # else { notify { "Not managing tsm service $::tsm::service_name, tsm::service_manage is $::tsm::service_manage": } }
 }
