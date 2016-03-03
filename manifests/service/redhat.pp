@@ -26,14 +26,14 @@ class tsm::service::redhat {
     source => $::tsm::service_script_source,
     #notify => Exec['tsm_systemd_daemon_reload'],
     #notify => Service[ $::tsm::service_name],
-  }
-
-  /*
+  } ->
   exec { '/bin/mv /etc/init.d/dsmcad /etc/init.d/rpm-dsmcad':
     #onlyif    => 'test -r /etc/init.d/dsmcad',
     creates   => '/etc/init.d/rpm-dsmcad',
     logoutput => true,
-  }
+  } ->
+
+  /*
   if getvar('::operatingsystemmajrelease') {
     $os_maj_release = $::operatingsystemmajrelease
   } else {
@@ -41,31 +41,33 @@ class tsm::service::redhat {
     $os_maj_release = $os_versions[0]
   }
   if $os_maj_release == 7 {
-    exec { 'tsm_systemd_daemon_reload':
-      path      => '/bin:/sbin:/usr/bin:/usr/sbin',
-      logoutput => true,
-      command   => '/usr/bin/systemctl daemon-reload',
-      require   => File[$::tsm::service_script],
-      notify    => Service[ $::tsm::service_name],
-    }
+    ...
   } else {
     notify { "Not rhel7 ($os_maj_release), no systemctl daemon-reload": }
   }
   */
 
+  exec { 'tsm_systemd_daemon_reload':
+    path      => '/bin:/sbin:/usr/bin:/usr/sbin',
+    logoutput => true,
+    command   => '/usr/bin/systemctl daemon-reload',
+    onlyif    => 'test -x /usr/bin/systemctl',
+    require   => File[$::tsm::service_script],
+    notify    => Service[ $::tsm::service_name],
+  } ->
   service { $::tsm::service_name:
     ensure     => $::tsm::service_ensure,
     enable     => $::tsm::service_enable,
     hasstatus  => true,
     hasrestart => true,
-    #    subscribe  => [
-    #  Concat[$::tsm::config],
+        subscribe  => [
+      Concat[$::tsm::config],
     #  Exec['tsm_systemd_daemon_reload'],
     #  File[$::tsm::service_script],
-    #],
+    ],
   }
 
   #File[$::tsm::service_script] -> Exec['tsm_systemd_daemon_reload'] -> Service[$::tsm::service_name]
-  File[$::tsm::service_script] -> Service[$::tsm::service_name]
+  #File[$::tsm::service_script] -> Service[$::tsm::service_name]
   #notify { "Now RHEL service setup": }
 }
