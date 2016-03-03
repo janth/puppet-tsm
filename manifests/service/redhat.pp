@@ -23,9 +23,11 @@ class tsm::service::redhat {
     group  => 'root',
     mode   => $service_script_mode,
     source => $::tsm::service_script_source,
-    notify => Exec['tsm_systemd_daemon_reload'],
+    #notify => Exec['tsm_systemd_daemon_reload'],
     #notify => Service[ $::tsm::service_name],
-  } ->
+  }
+
+  /*
   exec { '/bin/mv /etc/init.d/dsmcad /etc/init.d/rpm-dsmcad':
     #onlyif    => 'test -r /etc/init.d/dsmcad',
     creates   => '/etc/init.d/rpm-dsmcad',
@@ -48,6 +50,7 @@ class tsm::service::redhat {
   } else {
     notify { "Not rhel7 ($os_maj_release), no systemctl daemon-reload": }
   }
+  */
 
   service { $::tsm::service_name:
     ensure     => $::tsm::service_ensure,
@@ -61,6 +64,7 @@ class tsm::service::redhat {
     #],
   }
 
-  File[$::tsm::service_script] -> Exec['tsm_systemd_daemon_reload'] -> Service[$::tsm::service_name]
-  notify { "Now RHEL service setup": }
+  #File[$::tsm::service_script] -> Exec['tsm_systemd_daemon_reload'] -> Service[$::tsm::service_name]
+  File[$::tsm::service_script] -> Service[$::tsm::service_name]
+  #notify { "Now RHEL service setup": }
 }
